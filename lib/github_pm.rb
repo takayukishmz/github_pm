@@ -1,4 +1,5 @@
 require "github_pm/version"
+require "github_pm/client"
 
 module GithubPm
   def self.greet

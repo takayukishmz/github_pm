@@ -1,3 +1,6 @@
+require 'json'
+require 'httparty'
+
 module GithubPm
   class Client
     ACCESS_TOKEN = "xxxxxxxxxx"
