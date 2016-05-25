@@ -8,6 +8,12 @@ module GithubPm
     REPO_ROOT = "/repos/YOURREPOSITORY/"
     REPO = ENV['REPO']
 
+    # ACCESS_TOKEN = "f05f170083857436d3f34022fd35828c11b1d244"
+    # GITHUB_API_URL = "https://api.github.com"
+    # REPO_ROOT = "/repos/FiNCDeveloper/"
+    # REPO = ENV['REPO'] || 'wellness_survey'
+
+
     def initialize
 
     end
