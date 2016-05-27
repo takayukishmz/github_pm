@@ -1,5 +1,6 @@
 require 'json'
 require 'httparty'
+require 'octokit'
 
 module GithubPm
   class Client
@@ -8,8 +9,22 @@ module GithubPm
     REPO_ROOT = "/repos/YOURREPOSITORY/"
     REPO = ENV['REPO']
 
-    def initialize
+    # gpm = GithubPm.new({username: 'xxxx', password: 'xxxx'})
+    # gpm.set_repo("rails/rails")
+    # gpm.summarize_pull_request(xxx)
+    # gpm.report
 
+    def initialize(options=nil)
+      @client = Octokit::Client.new(options) if options
+    end
+
+    def set_repository(repository)
+      @repository = repository
+    end
+
+    def summarize_pull_request(number, options = {})
+      pull = @client.pull_request(@repository, number, options)
+      pull
     end
 
     class << self
