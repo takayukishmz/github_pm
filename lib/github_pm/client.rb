@@ -14,8 +14,8 @@ module GithubPm
     # gpm.summarize_pull_request(xxx)
     # gpm.report
 
-    def initialize(options=nil)
-      @client = Octokit::Client.new(options) if options
+    def initialize(options={})
+      @client = Octokit::Client.new(options)
     end
 
     def set_repository(repository)
@@ -23,12 +23,11 @@ module GithubPm
     end
 
     def summarize_pull_request(number, options = {})
-      pull = @client.pull_request(@repository, number, options)
-      pull
+      pr = @client.pull_request(@repository, number, options)
+      p commits_url = pr["_links"]["commits"]["href"]
     end
 
     class << self
-
       def fetch_pull_request(id, params = {})
         url = "#{GITHUB_API_URL}#{REPO_ROOT}#{REPO}/pulls/#{id}"
         fetch(:get, url, params)
