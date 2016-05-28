@@ -4,15 +4,11 @@ require 'octokit'
 
 module GithubPm
   class Client
-    ACCESS_TOKEN = "xxxxxxxxxx"
-    GITHUB_API_URL = "https://api.github.com"
-    REPO_ROOT = "/repos/YOURREPOSITORY/"
-    REPO = ENV['REPO']
 
-    # gpm = GithubPm.new({username: 'xxxx', password: 'xxxx'})
-    # gpm.set_repo("rails/rails")
-    # gpm.summarize_pull_request(xxx)
-    # gpm.report
+    # require("github_pm")
+    # client = GithubPm::Client.new(access_token: 'xxxxx')
+    # client.set_repository("repo")
+    # client.summarize_pull_request(xxx)
 
     def initialize(options={})
       @client = Octokit::Client.new(options)
@@ -23,34 +19,44 @@ module GithubPm
     end
 
     def summarize_pull_request(number, options = {})
-      pr = @client.pull_request(@repository, number, options)
-      p commits_url = pr["_links"]["commits"]["href"]
-    end
+      commits = []
+      page = 1
 
-    class << self
-      def fetch_pull_request(id, params = {})
-        url = "#{GITHUB_API_URL}#{REPO_ROOT}#{REPO}/pulls/#{id}"
-        fetch(:get, url, params)
+      print "Start to fetch commit histories "
+      loop do
+        fetched_commits = @client.pull_commits(@repository, number, {page: page})
+        print '.'
+        break if fetched_commits.size == 0
+        commits << fetched_commits
+        page += 1
       end
+      print " done!\n"
 
+      pull_requests = []
 
-      def fetch_pull_request_commits()
+      print "Start to fetch merged pull-request info "
+      commits.flatten.each do |commit|
+        message = commit['commit']['message']
+        author = commit['commit']['committer']['name']
 
-      end
+        if matches = message.match(/Merge pull request #([\d]+) /)
+          print '.'
+          pr_number = matches[1]
+          pr = @client.pull_request(@repository, pr_number)
 
-      def fetch_issues
-
-      end
-
-
-      def fetch(method, url, options)
-        default_options = {
-          headers: {
-            "Authorization" => "token #{ACCESS_TOKEN}",
-            "User-Agent" => "cli"
+          pull_requests << {
+            title: pr['title'],
+            url: pr['html_url'],
+            username: pr['user']['login']
           }
-        }
-        JSON.parse(HTTParty.send(method, url, default_options.merge(options)).body)
+        end
+      end
+      print " done!\n"
+
+      print "# RELEASE NOTE\n"
+      # output pr list
+      pull_requests.each do |pr|
+        print "#{pr[:title]} #{pr[:url]}\n"
       end
     end
   end
