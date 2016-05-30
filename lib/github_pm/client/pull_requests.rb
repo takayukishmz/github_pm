@@ -42,6 +42,8 @@ module GithubPm
         pull_requests.each do |pr|
           print "#{pr[:title]} #{pr[:url]}\n"
         end
+
+        return
       end
     end
   end
