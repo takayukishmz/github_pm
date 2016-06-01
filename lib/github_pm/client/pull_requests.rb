@@ -43,7 +43,18 @@ module GithubPm
           print "#{pr[:title]} #{pr[:url]}\n"
         end
 
+        GithubPm::Client::PullReqests.count_per_user(pull_requests)
+
         return
+      end
+
+      def self.count_per_user(pull_requests)
+        print "\n"
+        print "## Pull request summary\n"
+        print "\n"
+        print "```\n" #markdown
+        pull_requests.map { |pr| pr[:username] }.inject(Hash.new(0)) { |h, e| h[e] += 1 ; h }.tapp
+        print "```\n"
       end
     end
   end
