@@ -1,3 +1,5 @@
+require 'tapp'
+
 module GithubPm
   class Client
 
@@ -37,18 +39,21 @@ module GithubPm
         end
         print " done!\n"
 
-        print "# RELEASE NOTE\n"
-        # output pr list
-        pull_requests.each do |pr|
-          print "#{pr[:title]} #{pr[:url]}\n"
-        end
-
-        GithubPm::Client::PullReqests.count_per_user(pull_requests)
+        GithubPm::Client::PullReqests.output_as_list(pull_requests)
+        GithubPm::Client::PullReqests.output_count_per_user(pull_requests)
 
         return
       end
 
-      def self.count_per_user(pull_requests)
+      def self.output_as_list(pull_requests)
+        print "# RELEASE NOTE\n"
+
+        pull_requests.each do |pr|
+          print "#{pr[:title]} #{pr[:url]}\n"
+        end
+      end
+
+      def self.output_count_per_user(pull_requests)
         print "\n"
         print "## Pull request summary\n"
         print "\n"
