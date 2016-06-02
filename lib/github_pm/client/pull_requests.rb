@@ -53,6 +53,15 @@ module GithubPm
         end
       end
 
+      # OUTPUT format
+      #
+      # ## Pull request summary
+      # ```
+      # {"tom"=>10,
+      #  "kevin"=>14,
+      #  "taro"=>9,
+      #  "john"=>6}
+      # ```
       def self.output_count_per_user(pull_requests)
         print "\n"
         print "## Pull request summary\n"
