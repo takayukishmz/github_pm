@@ -45,6 +45,8 @@ module GithubPm
         return
       end
 
+      private_class_method
+
       def self.output_as_list(pull_requests)
         print "# RELEASE NOTE\n"
 
